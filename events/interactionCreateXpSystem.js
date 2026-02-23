@@ -24,7 +24,7 @@ function parseIdList(text) {
   return [...new Set(String(text || "").split(",").map((value) => value.trim()).filter(Boolean))];
 }
 
-function renderSettingPanel(guildId) {
+function renderSettingPanel(guildId, page = settingpanel.PAGE_ONE) {
   const joinSetting = getGuildJoinSetting(guildId);
   const leaveSetting = getGuildLeaveSetting(guildId);
   const spamSetting = getGuildSpamSetting(guildId);
@@ -33,8 +33,8 @@ function renderSettingPanel(guildId) {
   const xpSetting = getGuildXpSetting(guildId);
 
   return {
-    embeds: [settingpanel.buildPanel(joinSetting, leaveSetting, spamSetting, autoReactionSetting, shortLinkSetting, xpSetting)],
-    components: settingpanel.buildButtons(joinSetting, leaveSetting, spamSetting, autoReactionSetting, shortLinkSetting, xpSetting),
+    embeds: [settingpanel.buildPanel(joinSetting, leaveSetting, spamSetting, autoReactionSetting, shortLinkSetting, xpSetting, page)],
+    components: settingpanel.buildButtons(joinSetting, leaveSetting, spamSetting, autoReactionSetting, shortLinkSetting, xpSetting, page),
   };
 }
 
@@ -65,7 +65,7 @@ module.exports = {
       }
 
       setGuildXpSetting(guildId, { ...setting, enabled: !setting.enabled });
-      return interaction.update(renderSettingPanel(guildId));
+      return interaction.update(renderSettingPanel(guildId, settingpanel.inferPanelPageFromMessage(interaction.message)));
     }
 
     if (interaction.isButton() && interaction.customId === "xp_open_modal") {
@@ -135,7 +135,7 @@ module.exports = {
       });
 
       return interaction.reply({
-        ...renderSettingPanel(guildId),
+        ...renderSettingPanel(guildId, settingpanel.PAGE_TWO),
         flags: MessageFlags.Ephemeral,
       });
     }

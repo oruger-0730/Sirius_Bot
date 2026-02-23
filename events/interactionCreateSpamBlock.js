@@ -45,7 +45,7 @@ function parseDetectionRule(text) {
   };
 }
 
-function renderSettingPanel(guildId) {
+function renderSettingPanel(guildId, page = settingpanel.PAGE_ONE) {
   const joinSetting = getGuildJoinSetting(guildId);
   const leaveSetting = getGuildLeaveSetting(guildId);
   const spamSetting = getGuildSpamSetting(guildId);
@@ -54,8 +54,8 @@ function renderSettingPanel(guildId) {
   const xpSetting = getGuildXpSetting(guildId);
 
   return {
-    embeds: [settingpanel.buildPanel(joinSetting, leaveSetting, spamSetting, autoReactionSetting, shortLinkSetting, xpSetting)],
-    components: settingpanel.buildButtons(joinSetting, leaveSetting, spamSetting, autoReactionSetting, shortLinkSetting, xpSetting),
+    embeds: [settingpanel.buildPanel(joinSetting, leaveSetting, spamSetting, autoReactionSetting, shortLinkSetting, xpSetting, page)],
+    components: settingpanel.buildButtons(joinSetting, leaveSetting, spamSetting, autoReactionSetting, shortLinkSetting, xpSetting, page),
   };
 }
 
@@ -79,7 +79,7 @@ module.exports = {
 
     if (interaction.isButton() && interaction.customId === "spamblock_toggle") {
       setGuildSpamSetting(guildId, { ...setting, enabled: !setting.enabled });
-      return interaction.update(renderSettingPanel(guildId));
+      return interaction.update(renderSettingPanel(guildId, settingpanel.inferPanelPageFromMessage(interaction.message)));
     }
 
     if (interaction.isButton() && interaction.customId === "spamblock_open_modal") {
