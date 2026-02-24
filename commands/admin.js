@@ -78,13 +78,23 @@ module.exports = {
     let admin, blacklist;
     try {
       admin = JSON.parse(await fsp.readFile(adminPath, "utf8"));
-    } catch {
-      admin = { users: [] };
+    } catch (err) {
+      if (err.code === "ENOENT") {
+        admin = { users: [] };
+      } else {
+        console.error("Failed to read or parse admin config:", err);
+        throw err;
+      }
     }
     try {
       blacklist = JSON.parse(await fsp.readFile(blacklistPath, "utf8"));
-    } catch {
-      blacklist = { users: [], servers: [] };
+    } catch (err) {
+      if (err.code === "ENOENT") {
+        blacklist = { users: [], servers: [] };
+      } else {
+        console.error("Failed to read or parse blacklist config:", err);
+        throw err;
+      }
     }
 
     // ===== 管理者チェック =====
