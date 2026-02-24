@@ -215,7 +215,7 @@ module.exports = {
     if (sub === "member") {
       const user = interaction.options.getUser("user");
 
-      if (admins.admins.includes(user.id)) {
+      if (admin.users.includes(user.id)) {
         return interaction.reply({
           embeds: [
             new EmbedBuilder()
@@ -227,8 +227,8 @@ module.exports = {
         });
       }
 
-      admins.admins.push(user.id);
-      await fsp.writeFile(adminPath, JSON.stringify(admins, null, 2));
+      admin.users.push(user.id);
+      await fsp.writeFile(adminPath, JSON.stringify(admin, null, 2));
 
       return interaction.reply({
         embeds: [
