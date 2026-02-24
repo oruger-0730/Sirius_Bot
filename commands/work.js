@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require("discord.js");
-const { getUserEconomy, addBalance, setLastWorkAt } = require("../utils/economy");
+const { getUserEconomy, addBalance, setLastWorkAt, setUserEconomy } = require("../utils/economy");
 
 const COOLDOWN_MS = 10 * 60 * 1000;
 
@@ -31,8 +31,12 @@ module.exports = {
     }
 
     const earned = Math.floor(Math.random() * 1001) + 500;
-    const updated = await addBalance(userId, earned);
+    await addBalance(userId, earned);
     await setLastWorkAt(userId, now);
+    // Save username to economy.json
+    await setUserEconomy(userId, { username: interaction.user.username });
+
+    const updated = await getUserEconomy(userId);
 
     return interaction.reply({
       embeds: [
