@@ -49,7 +49,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 	}
 
 	if (subcommand === "info") {
-		await interaction.deferRelpy();
+		await interaction.deferReply();
 		
 		const account = await prisma.economyAccount.findUnique({
 			where: {
