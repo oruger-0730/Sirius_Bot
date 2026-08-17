@@ -1,6 +1,7 @@
 import type { Client } from "discord.js";
 import { Events } from "discord.js";
 import { updateGlobalPresence } from "@/utils/presence";
+import { scheduleMidnightServerSnapshot } from "@/utils/scheduleMidnightServerSnapshot";
 import { sendBotOnlineStatus } from "@/utils/statusWebhook";
 
 const event = {
@@ -68,6 +69,13 @@ const event = {
 			await updatePresence();
 			setInterval(updatePresence, 30000);
 		}, 10000);
+
+		// ======================
+		// 午前0時 サーバーデータ自動保存（shard0のみ）
+		// ======================
+		if (shardId === 0) {
+			scheduleMidnightServerSnapshot(client);
+		}
 	},
 };
 
