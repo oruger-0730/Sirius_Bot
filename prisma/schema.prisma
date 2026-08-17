@@ -45,7 +45,7 @@ model ServerSetting {
   mentionReadoutNameOnly       Boolean  @default(false)
   mentionReadoutVolume         Int      @default(50)
   regexPatterns                String?
-  serverDataEnabled            Boolean  @default(false)
+  dataRetentionEnabled            Boolean  @default(false)
 }
 
 model Account {
