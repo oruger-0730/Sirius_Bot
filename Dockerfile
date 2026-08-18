@@ -1,0 +1,15 @@
+FROM oven/bun:1.3.14-slim
+
+LABEL org.opencontainers.image.source="https://github.com/oruger-0730/Sirius_Bot"
+LABEL org.opencontainers.image.title="SiriusBot"
+
+WORKDIR /app
+
+COPY package*.json ./
+COPY bun.lock ./
+
+RUN bun install --trust-all
+
+COPY . .
+
+CMD ["sh", "-c", "bunx prisma migrate deploy && bun run src/index.ts"]

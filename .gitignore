@@ -151,3 +151,6 @@ json/
 node_modules/.prisma/
 .prisma/
 prisma/client/
+
+# Docker development files
+docker/
