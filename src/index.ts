@@ -1,12 +1,13 @@
-import { bootstrap } from 'global-agent';
+import { bootstrap } from "global-agent";
+
 const PROXY_URL = process.env.https_proxy ?? process.env.http_proxy;
 process.env.GLOBAL_AGENT_HTTP_PROXY = PROXY_URL;
 bootstrap();
+
 import * as fsPromises from "node:fs/promises";
 import * as path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import cors from "cors";
-import { setGlobalDispatcher, ProxyAgent } from "undici";
 import {
 	Client,
 	Collection,
@@ -18,6 +19,7 @@ import {
 } from "discord.js";
 import * as dotenv from "dotenv";
 import express, { type Request, type Response } from "express";
+import { ProxyAgent, setGlobalDispatcher } from "undici";
 import { initErrorReporting } from "@/utils/errorWebhook";
 import { ensureJsonDataDir } from "@/utils/jsonFileStore";
 
@@ -545,7 +547,9 @@ async function loadEvents(client: ExtendedClient) {
 
 async function runShardProcess() {
 	const client = createClient();
-	const rest = new REST({ version: "10", agent: restProxyAgent }).setToken(token);
+	const rest = new REST({ version: "10", agent: restProxyAgent }).setToken(
+		token,
+	);
 	const shardId = parseCurrentShardId();
 	const primaryShard = shardId === 0;
 
