@@ -14,4 +14,6 @@ COPY . .
 
 RUN bunx prisma generate
 
+USER bun
+
 CMD ["sh", "-c", "bunx prisma migrate deploy && bun run src/index.ts"]
