@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 COPY bun.lock ./
 
-RUN bun install --trust-all
+RUN bun install --frozen-lockfile
 
 COPY . .
 
