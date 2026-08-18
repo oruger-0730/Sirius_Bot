@@ -12,4 +12,6 @@ RUN bun install --frozen-lockfile
 
 COPY . .
 
+RUN bunx prisma generate
+
 CMD ["sh", "-c", "bunx prisma migrate deploy && bun run src/index.ts"]
