@@ -220,7 +220,6 @@ export async function saveGuildSettings(
 				mentionReadoutEnabled: data.mentionReadoutEnabled ?? false,
 				mentionReadoutNameOnly: data.mentionReadoutNameOnly ?? false,
 				mentionReadoutVolume: data.mentionReadoutVolume ?? 50,
-				dataRetentionEnabled: data.dataRetentionEnabled ?? false,
 			},
 		});
 
