@@ -125,8 +125,12 @@ exports.Prisma.ServerSettingScalarFieldEnum = {
   serverId: 'serverId',
   spamBlockEnabled: 'spamBlockEnabled',
   inviteBlockEnabled: 'inviteBlockEnabled',
+  shortBlockEnabled: 'shortBlockEnabled',
+  regexBlockEnabled: 'regexBlockEnabled',
   spamReportChannelId: 'spamReportChannelId',
   inviteReportChannelId: 'inviteReportChannelId',
+  shortReportChannelId: 'shortReportChannelId',
+  regexReportChannelId: 'regexReportChannelId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   ignoredChannels: 'ignoredChannels',
@@ -135,14 +139,26 @@ exports.Prisma.ServerSettingScalarFieldEnum = {
   spamIgnoredChannels: 'spamIgnoredChannels',
   inviteIgnoredRoles: 'inviteIgnoredRoles',
   inviteIgnoredChannels: 'inviteIgnoredChannels',
+  shortIgnoredRoles: 'shortIgnoredRoles',
+  shortIgnoredChannels: 'shortIgnoredChannels',
+  regexIgnoredRoles: 'regexIgnoredRoles',
+  regexIgnoredChannels: 'regexIgnoredChannels',
   honeypotChannelId: 'honeypotChannelId',
   honeypotEnabled: 'honeypotEnabled',
   honeypotIgnoreRole: 'honeypotIgnoreRole',
   honeypotReportId: 'honeypotReportId',
   autoReactions: 'autoReactions',
   earthquakeNotifyEnabled: 'earthquakeNotifyEnabled',
+  earthquakeNotifyRole: 'earthquakeNotifyRole',
   earthquakeChannelId: 'earthquakeChannelId',
-  earthquakeWebhookUrl: 'earthquakeWebhookUrl'
+  earthquakeWebhookUrl: 'earthquakeWebhookUrl',
+  earthquakeNotifyScale: 'earthquakeNotifyScale',
+  joinLeaveNotificationEnabled: 'joinLeaveNotificationEnabled',
+  mentionReadoutEnabled: 'mentionReadoutEnabled',
+  mentionReadoutNameOnly: 'mentionReadoutNameOnly',
+  mentionReadoutVolume: 'mentionReadoutVolume',
+  regexPatterns: 'regexPatterns',
+  serverDataEnabled: 'serverDataEnabled'
 };
 
 exports.Prisma.AccountScalarFieldEnum = {
@@ -183,19 +199,6 @@ exports.Prisma.UserScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.UsersScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  image: 'image',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  acceptedPrivacy: 'acceptedPrivacy',
-  acceptedTerms: 'acceptedTerms',
-  birthday: 'birthday',
-  economyRegistered: 'economyRegistered',
-  ipAddress: 'ipAddress'
-};
-
 exports.Prisma.VerificationScalarFieldEnum = {
   id: 'id',
   identifier: 'identifier',
@@ -210,6 +213,88 @@ exports.Prisma.SurvivalRankingScalarFieldEnum = {
   username: 'username',
   bestDays: 'bestDays',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.EconomyAffiliationScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  enabled: 'enabled',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.EconomyAccountScalarFieldEnum = {
+  id: 'id',
+  discordId: 'discordId',
+  name: 'name',
+  image: 'image',
+  affiliationName: 'affiliationName',
+  affiliationId: 'affiliationId',
+  coins: 'coins',
+  intelligenceLevel: 'intelligenceLevel',
+  satiation: 'satiation',
+  happiness: 'happiness',
+  birthday: 'birthday',
+  lastWorkAt: 'lastWorkAt',
+  inventory: 'inventory',
+  lastBirthdayBonusYear: 'lastBirthdayBonusYear',
+  lastSchoolAt: 'lastSchoolAt',
+  schoolAttendanceCount: 'schoolAttendanceCount',
+  status: 'status',
+  ipAddress: 'ipAddress',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.EconomyLogScalarFieldEnum = {
+  id: 'id',
+  discordId: 'discordId',
+  accountId: 'accountId',
+  eventType: 'eventType',
+  amount: 'amount',
+  balanceBefore: 'balanceBefore',
+  balanceAfter: 'balanceAfter',
+  description: 'description',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.RaceHistoryScalarFieldEnum = {
+  id: 'id',
+  discordId: 'discordId',
+  selectedHorseIndex: 'selectedHorseIndex',
+  selectedHorseName: 'selectedHorseName',
+  betType: 'betType',
+  betAmount: 'betAmount',
+  odds: 'odds',
+  isHit: 'isHit',
+  payout: 'payout',
+  balanceBefore: 'balanceBefore',
+  balanceAfter: 'balanceAfter',
+  raceResult: 'raceResult',
+  createdAt: 'createdAt',
+  economyAccountId: 'economyAccountId'
+};
+
+exports.Prisma.ServerSnapshotScalarFieldEnum = {
+  id: 'id',
+  serverId: 'serverId',
+  savedAt: 'savedAt',
+  serverName: 'serverName',
+  serverDescription: 'serverDescription',
+  iconUrl: 'iconUrl',
+  bannerUrl: 'bannerUrl',
+  ownerId: 'ownerId',
+  memberCount: 'memberCount',
+  boostCount: 'boostCount',
+  boostTier: 'boostTier',
+  channels: 'channels',
+  roles: 'roles',
+  members: 'members',
+  emojis: 'emojis',
+  stickers: 'stickers'
 };
 
 exports.Prisma.SortOrder = {
@@ -227,18 +312,26 @@ exports.Prisma.ServerSettingOrderByRelevanceFieldEnum = {
   serverId: 'serverId',
   spamReportChannelId: 'spamReportChannelId',
   inviteReportChannelId: 'inviteReportChannelId',
+  shortReportChannelId: 'shortReportChannelId',
+  regexReportChannelId: 'regexReportChannelId',
   ignoredChannels: 'ignoredChannels',
   ignoredRoles: 'ignoredRoles',
   spamIgnoredRoles: 'spamIgnoredRoles',
   spamIgnoredChannels: 'spamIgnoredChannels',
   inviteIgnoredRoles: 'inviteIgnoredRoles',
   inviteIgnoredChannels: 'inviteIgnoredChannels',
+  shortIgnoredRoles: 'shortIgnoredRoles',
+  shortIgnoredChannels: 'shortIgnoredChannels',
+  regexIgnoredRoles: 'regexIgnoredRoles',
+  regexIgnoredChannels: 'regexIgnoredChannels',
   honeypotChannelId: 'honeypotChannelId',
   honeypotIgnoreRole: 'honeypotIgnoreRole',
   honeypotReportId: 'honeypotReportId',
   autoReactions: 'autoReactions',
+  earthquakeNotifyRole: 'earthquakeNotifyRole',
   earthquakeChannelId: 'earthquakeChannelId',
-  earthquakeWebhookUrl: 'earthquakeWebhookUrl'
+  earthquakeWebhookUrl: 'earthquakeWebhookUrl',
+  regexPatterns: 'regexPatterns'
 };
 
 exports.Prisma.AccountOrderByRelevanceFieldEnum = {
@@ -268,13 +361,6 @@ exports.Prisma.UserOrderByRelevanceFieldEnum = {
   image: 'image'
 };
 
-exports.Prisma.UsersOrderByRelevanceFieldEnum = {
-  id: 'id',
-  name: 'name',
-  image: 'image',
-  ipAddress: 'ipAddress'
-};
-
 exports.Prisma.VerificationOrderByRelevanceFieldEnum = {
   id: 'id',
   identifier: 'identifier',
@@ -286,15 +372,70 @@ exports.Prisma.SurvivalRankingOrderByRelevanceFieldEnum = {
   username: 'username'
 };
 
+exports.Prisma.EconomyAffiliationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description'
+};
+
+exports.Prisma.EconomyAccountOrderByRelevanceFieldEnum = {
+  id: 'id',
+  discordId: 'discordId',
+  name: 'name',
+  image: 'image',
+  affiliationName: 'affiliationName',
+  affiliationId: 'affiliationId',
+  inventory: 'inventory',
+  status: 'status',
+  ipAddress: 'ipAddress'
+};
+
+exports.Prisma.EconomyLogOrderByRelevanceFieldEnum = {
+  id: 'id',
+  discordId: 'discordId',
+  accountId: 'accountId',
+  eventType: 'eventType',
+  description: 'description',
+  metadata: 'metadata'
+};
+
+exports.Prisma.RaceHistoryOrderByRelevanceFieldEnum = {
+  id: 'id',
+  discordId: 'discordId',
+  selectedHorseName: 'selectedHorseName',
+  betType: 'betType',
+  raceResult: 'raceResult',
+  economyAccountId: 'economyAccountId'
+};
+
+exports.Prisma.ServerSnapshotOrderByRelevanceFieldEnum = {
+  id: 'id',
+  serverId: 'serverId',
+  serverName: 'serverName',
+  serverDescription: 'serverDescription',
+  iconUrl: 'iconUrl',
+  bannerUrl: 'bannerUrl',
+  ownerId: 'ownerId',
+  channels: 'channels',
+  roles: 'roles',
+  members: 'members',
+  emojis: 'emojis',
+  stickers: 'stickers'
+};
+
 
 exports.Prisma.ModelName = {
   ServerSetting: 'ServerSetting',
   Account: 'Account',
   Session: 'Session',
   User: 'User',
-  Users: 'Users',
   Verification: 'Verification',
-  SurvivalRanking: 'SurvivalRanking'
+  SurvivalRanking: 'SurvivalRanking',
+  EconomyAffiliation: 'EconomyAffiliation',
+  EconomyAccount: 'EconomyAccount',
+  EconomyLog: 'EconomyLog',
+  RaceHistory: 'RaceHistory',
+  ServerSnapshot: 'ServerSnapshot'
 };
 
 /**

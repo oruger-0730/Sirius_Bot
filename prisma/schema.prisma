@@ -44,6 +44,7 @@ model ServerSetting {
   mentionReadoutNameOnly       Boolean  @default(false)
   mentionReadoutVolume         Int      @default(50)
   regexPatterns                String?
+  dataRetentionEnabled            Boolean  @default(false)
 }
 
 model Account {
@@ -195,4 +196,32 @@ model RaceHistory {
   @@index([discordId])
   @@index([createdAt])
   @@map("race_history")
+}
+
+/// Discordサーバーの日次スナップショット（午前0時に自動保存）
+model ServerSnapshot {
+  id        String   @id @default(cuid()) @db.VarChar(255)
+  serverId  String   @db.VarChar(255)
+  savedAt   DateTime @default(now())
+
+  // サーバー基本情報
+  serverName        String  @db.VarChar(255)
+  serverDescription String? @db.Text
+  iconUrl           String? @db.Text
+  bannerUrl         String? @db.Text
+  ownerId           String  @db.VarChar(255)
+  memberCount       Int
+  boostCount        Int     @default(0)
+  boostTier         Int     @default(0)
+
+  // チャンネル・カテゴリー・ロール・メンバー（JSON）
+  channels  String @db.LongText // ChannelSnapshot[]
+  roles     String @db.LongText // RoleSnapshot[]
+  members   String @db.LongText // MemberSnapshot[]
+  emojis    String @db.LongText // EmojiSnapshot[]
+  stickers  String @db.LongText // StickerSnapshot[]
+
+  @@index([serverId])
+  @@index([savedAt])
+  @@map("server_snapshot")
 }
