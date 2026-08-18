@@ -40,7 +40,6 @@ if (!applicationId) {
 const SHARD_LIST = [0] as const;
 const TOTAL_SHARDS = SHARD_LIST.length;
 
-
 /* ======================
    コマンド型
 ====================== */
@@ -528,9 +527,7 @@ async function loadEvents(client: ExtendedClient) {
 
 async function runShardProcess() {
 	const client = createClient();
-	const rest = new REST({ version: "10" }).setToken(
-		token,
-	);
+	const rest = new REST({ version: "10" }).setToken(token);
 	const shardId = parseCurrentShardId();
 	const primaryShard = shardId === 0;
 
