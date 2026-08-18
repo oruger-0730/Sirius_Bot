@@ -154,3 +154,6 @@ prisma/client/
 
 # Docker development files
 docker/
+
+# git
+.git
