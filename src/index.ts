@@ -1,9 +1,3 @@
-import { bootstrap } from "global-agent";
-
-const PROXY_URL = process.env.https_proxy ?? process.env.http_proxy;
-process.env.GLOBAL_AGENT_HTTP_PROXY = PROXY_URL;
-bootstrap();
-
 import * as fsPromises from "node:fs/promises";
 import * as path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
