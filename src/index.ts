@@ -19,7 +19,6 @@ import {
 } from "discord.js";
 import * as dotenv from "dotenv";
 import express, { type Request, type Response } from "express";
-import { ProxyAgent, setGlobalDispatcher } from "undici";
 import { initErrorReporting } from "@/utils/errorWebhook";
 import { ensureJsonDataDir } from "@/utils/jsonFileStore";
 
@@ -41,21 +40,6 @@ if (!applicationId) {
 const SHARD_LIST = [0] as const;
 const TOTAL_SHARDS = SHARD_LIST.length;
 
-let restProxyAgent: ProxyAgent | undefined;
-if (PROXY_URL) {
-	const url = new URL(PROXY_URL);
-	if (url.username && url.password) {
-		const credentials = `${decodeURIComponent(url.username)}:${decodeURIComponent(url.password)}`;
-		const base64Credentials = Buffer.from(credentials).toString("base64");
-		restProxyAgent = new ProxyAgent({
-			uri: PROXY_URL,
-			token: `Basic ${base64Credentials}`, // 👈 これでundiciが認証情報を正しく認識します
-		});
-	} else {
-		restProxyAgent = new ProxyAgent(PROXY_URL);
-	}
-	setGlobalDispatcher(restProxyAgent);
-}
 
 /* ======================
    コマンド型
@@ -137,9 +121,6 @@ const parseCurrentShardId = () => {
 
 const createClient = () =>
 	new ExtendedClient({
-		rest: {
-			agent: restProxyAgent,
-		},
 		intents: [
 			GatewayIntentBits.Guilds,
 			GatewayIntentBits.GuildMessages,
@@ -318,7 +299,7 @@ const setupApiRoutes = (client: ExtendedClient, rest: REST) => {
 				const data = results.find((r) => r !== null);
 				if (!data) return res.status(404).json({ error: "Guild not found" });
 				return res.json(data);
-			} catch (err: unknown) {
+			} catch (_err: unknown) {
 				return res.status(500).json({ error: "Internal server error" });
 			}
 		},
@@ -547,7 +528,7 @@ async function loadEvents(client: ExtendedClient) {
 
 async function runShardProcess() {
 	const client = createClient();
-	const rest = new REST({ version: "10", agent: restProxyAgent }).setToken(
+	const rest = new REST({ version: "10" }).setToken(
 		token,
 	);
 	const shardId = parseCurrentShardId();
