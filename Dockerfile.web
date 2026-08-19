@@ -1,11 +1,15 @@
 # --------------------------------------------------
-# Base Stage
+# Base
 # --------------------------------------------------
 FROM ghcr.io/pnpm/pnpm:11 AS base
 
 RUN pnpm runtime set node 24 -g
 
-RUN apt update && apt install -y --no-install-recommends git ca-certificates openssl \
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends \
+  git \
+  ca-certificates \
+  openssl \
   && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -16,20 +20,22 @@ ENV DATABASE_HOST="dummy" \
   DATABASE_PASSWORD="dummy" \
   DATABASE_NAME="dummy"
 
+
 # --------------------------------------------------
-# Dependencies Stage
+# Dependencies
 # --------------------------------------------------
 FROM base AS deps
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc* ./
-COPY apps/bot/package.json ./apps/bot/
-COPY apps/web/package.json ./apps/web/
-COPY packages/database/package.json ./packages/database/
+COPY apps/bot/package.json ./apps/bot/package.json
+COPY apps/web/package.json ./apps/web/package.json
+COPY packages/database/package.json ./packages/database/package.json
 
 RUN pnpm install --frozen-lockfile
 
+
 # --------------------------------------------------
-# Builder Stage
+# Builder
 # --------------------------------------------------
 FROM base AS builder
 
@@ -40,27 +46,27 @@ COPY --from=deps /app/apps/web/node_modules ./apps/web/node_modules
 COPY --from=deps /app/packages/database/node_modules ./packages/database/node_modules
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.json prisma.config.ts* .npmrc* ./
+
 COPY apps/web ./apps/web
 COPY packages/database ./packages/database
 
 RUN pnpm --filter @sirius/database db:generate
-RUN pnpm --filter web build
+RUN pnpm --filter @sirius/web build
+
 
 # --------------------------------------------------
-# Runtime Stage
+# Runtime
 # --------------------------------------------------
 FROM base AS runner
-
-WORKDIR /app
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-COPY certs/ ./certs/
-
 COPY --from=builder /app/apps/web/.next/standalone ./
 COPY --from=builder /app/apps/web/.next/static ./apps/web/.next/static
 COPY --from=builder /app/apps/web/public ./apps/web/public
+
+COPY certs ./certs
 
 EXPOSE 3000
 

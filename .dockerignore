@@ -1,14 +1,17 @@
+*.log
+
 node_modules
-.next
 .git
 .gitignore
+Dockerfile*
+README.md
+apps/web/.next
+apps/web/node_modules
+apps/bot/node_modules
+packages/database/node_modules
 
 .env
 .env.*
 !.env.example
 
 docker/db/data
-
-*.log
-
-README.md
