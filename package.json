@@ -6,16 +6,20 @@
 		"packages/*"
 	],
 	"scripts": {
-		"dev:web": "bun --cwd apps/web dev",
-		"dev:bot": "bun --cwd apps/bot dev",
-		"build:web": "bun --cwd apps/web build",
-		"build:bot": "bun --cwd apps/bot build",
+		"dev:web": "pnpm --filter @sirius/web dev",
+		"dev:bot": "pnpm --filter @sirius/bot dev",
+		"build:web": "pnpm --filter @sirius/web build",
+		"build:bot": "pnpm --filter @sirius/bot build",
 		"check": "biome check .",
 		"check:fix": "biome check . --write",
 		"format": "biome format --write .",
 		"typecheck": "tsc --build"
 	},
+	"dependencies": {
+		"dotenv": "^17.4.2"
+	},
 	"devDependencies": {
-		"@biomejs/biome": "^2.5.9"
+		"@biomejs/biome": "^2.5.9",
+		"prisma": "^7.9.1"
 	}
 }

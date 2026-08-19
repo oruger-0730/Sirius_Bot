@@ -1,23 +1,15 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: 起動時に設定されているものとみなして黙認する */
 import { betterAuth } from "better-auth";
-import { createPool } from "mysql2/promise";
 import { headers } from "next/headers";
 import { BASE_URL } from "./constants";
+import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "@sirius/database";
 
 export const auth = betterAuth({
 	appName: "SiriusBot",
 	baseURL: process.env.BETTER_AUTH_URL || BASE_URL,
-	database: createPool({
-		host: process.env.DATABASE_HOST!,
-		port: Number(process.env.DATABASE_PORT),
-		user: process.env.DATABASE_USER!,
-		password: process.env.DATABASE_PASSWORD!,
-		database: "bot",
-		ssl: {
-			rejectUnauthorized: true,
-		},
-		timezone: "Z",
+	database: prismaAdapter(prisma,{
+		provider: "mysql"
 	}),
 	secret: process.env.BETTER_AUTH_SECRET!,
 

@@ -27,9 +27,11 @@ const ssl = process.env.DATABASE_CA_PATH
 	? {
 			ca: fs.readFileSync(process.env.DATABASE_CA_PATH, "utf8"),
 			rejectUnauthorized: true,
+			servername: process.env.DATABASE_HOST,
 		}
 	: {
 			rejectUnauthorized: true,
+			servername: process.env.DATABASE_HOST,
 		};
 
 const adapter = new PrismaMariaDb({

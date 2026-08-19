@@ -4,6 +4,12 @@ const nextConfig: NextConfig = {
 	images: {
 		remotePatterns: [{ protocol: "https", hostname: "cdn.discordapp.com" }],
 	},
+	output: "standalone",
+	serverExternalPackages: [
+		"mysql2",
+		"@prisma/client",
+		"@prisma/adapter-mariadb",
+	],
 };
 
 export default nextConfig;
