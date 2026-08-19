@@ -22,7 +22,7 @@ ENV DATABASE_HOST="dummy" \
 
 
 # --------------------------------------------------
-# Dependencies Stage
+# Dependencies
 # --------------------------------------------------
 FROM base AS deps
 
@@ -36,7 +36,7 @@ RUN pnpm install --frozen-lockfile
 
 
 # --------------------------------------------------
-# Builder Stage
+# Builder
 # --------------------------------------------------
 FROM base AS builder
 
@@ -54,39 +54,25 @@ COPY packages/database ./packages/database
 
 RUN pnpm --filter @sirius/database db:generate
 
-# package.json の name が "web" なら web
 RUN pnpm --filter web build
 
+# Debug
+RUN echo "=== Next standalone ===" \
+  && find /app/apps/web/.next/standalone -maxdepth 4 -type f | sort
 
-# --------------------------------------------------
-# Fix pnpm symlinks inside Next.js standalone
-# --------------------------------------------------
-RUN cd /app/apps/web/.next/standalone/node_modules \
-  && for mod in *; do \
-  [ -L "$mod" ] || continue; \
-  rm "$mod"; \
-  pkg=$(find /app/node_modules/.pnpm \
-  -path "*/node_modules/$mod/package.json" 2>/dev/null | head -1); \
-  if [ -n "$pkg" ]; then \
-  store_nm=$(dirname "$(dirname "$pkg")"); \
-  for dep in "$store_nm"/*; do \
-  dep_name=$(basename "$dep"); \
-  [ -e "$dep_name" ] && ! [ -L "$dep_name" ] && continue; \
-  [ -L "$dep_name" ] && rm "$dep_name"; \
-  cp -rL "$dep" "$dep_name" 2>/dev/null || true; \
-  done; \
-  fi; \
-  done \
-  && cp -r /app/apps/web/.next/standalone /app/standalone
+# Copy standalone as-is
+RUN cp -a /app/apps/web/.next/standalone /app/standalone
 
 
 # --------------------------------------------------
-# Runtime Stage
+# Runtime
 # --------------------------------------------------
 FROM base AS runner
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
 
 RUN groupadd --system --gid 1001 nodejs \
   && useradd --system --uid 1001 --gid 1001 nextjs
@@ -103,11 +89,11 @@ COPY --from=builder \
 
 COPY certs/ ./certs/
 
+RUN echo "=== Runtime /app ===" \
+  && find /app -maxdepth 3 -type f | sort
+
 USER nextjs
 
 EXPOSE 3000
-
-ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
 
 CMD ["node", "server.js"]
