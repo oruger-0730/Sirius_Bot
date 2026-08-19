@@ -20,17 +20,20 @@ ENV DATABASE_HOST="dummy" \
   DATABASE_PASSWORD="dummy" \
   DATABASE_NAME="dummy"
 
+
 # --------------------------------------------------
 # Dependencies Stage
 # --------------------------------------------------
 FROM base AS deps
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc* ./
-COPY apps/bot/package.json ./apps/bot/
-COPY apps/web/package.json ./apps/web/
-COPY packages/database/package.json ./packages/database/
+
+COPY apps/bot/package.json ./apps/bot/package.json
+COPY apps/web/package.json ./apps/web/package.json
+COPY packages/database/package.json ./packages/database/package.json
 
 RUN pnpm install --frozen-lockfile
+
 
 # --------------------------------------------------
 # Builder Stage
@@ -38,17 +41,44 @@ RUN pnpm install --frozen-lockfile
 FROM base AS builder
 
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_ENV=production
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/apps/web/node_modules ./apps/web/node_modules
 COPY --from=deps /app/packages/database/node_modules ./packages/database/node_modules
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.json prisma.config.ts* .npmrc* ./
+
 COPY apps/web ./apps/web
 COPY packages/database ./packages/database
 
 RUN pnpm --filter @sirius/database db:generate
-RUN pnpm --filter @siriusbot/web build
+
+# package.json の name が "web" なら web
+RUN pnpm --filter web build
+
+
+# --------------------------------------------------
+# Fix pnpm symlinks inside Next.js standalone
+# --------------------------------------------------
+RUN cd /app/apps/web/.next/standalone/node_modules \
+  && for mod in *; do \
+  [ -L "$mod" ] || continue; \
+  rm "$mod"; \
+  pkg=$(find /app/node_modules/.pnpm \
+  -path "*/node_modules/$mod/package.json" 2>/dev/null | head -1); \
+  if [ -n "$pkg" ]; then \
+  store_nm=$(dirname "$(dirname "$pkg")"); \
+  for dep in "$store_nm"/*; do \
+  dep_name=$(basename "$dep"); \
+  [ -e "$dep_name" ] && ! [ -L "$dep_name" ] && continue; \
+  [ -L "$dep_name" ] && rm "$dep_name"; \
+  cp -rL "$dep" "$dep_name" 2>/dev/null || true; \
+  done; \
+  fi; \
+  done \
+  && cp -r /app/apps/web/.next/standalone /app/standalone
+
 
 # --------------------------------------------------
 # Runtime Stage
@@ -58,12 +88,26 @@ FROM base AS runner
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-COPY --from=builder /app/apps/web/.next/standalone ./
-COPY --from=builder /app/apps/web/.next/static ./apps/web/.next/static
-COPY --from=builder /app/apps/web/public ./apps/web/public
+RUN addgroup --system --gid 1001 nodejs \
+  && adduser --system --uid 1001 nextjs
+
+COPY --from=builder /app/apps/web/public ./public
+
+COPY --from=builder \
+  --chown=nextjs:nodejs \
+  /app/standalone ./
+
+COPY --from=builder \
+  --chown=nextjs:nodejs \
+  /app/apps/web/.next/static ./.next/static
 
 COPY certs/ ./certs/
 
+USER nextjs
+
 EXPOSE 3000
 
-CMD ["node", "apps/web/server.js"]
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+CMD ["node", "server.js"]

@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  labels:
+    app: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web
+  revisionHistoryLimit: 1
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+        - name: web
+          image: ghcr.io/oruger-0730/sirius-web:1.0.12
+          envFrom:
+            - secretRef:
+                name: web-secret
+            - secretRef:
+                name: common-secret
+          resources:
+            requests:
+              cpu: 500m # 必要最低限の0.5CPUを確保
+              memory: 64Mi # 必要最低限の64MiBを確保
+            limits:
+              cpu: 1000m # 最大1CPUまで使用可能
+              memory: 128Mi # 最大128MiBまで使用可能
