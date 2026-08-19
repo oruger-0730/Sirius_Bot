@@ -5,7 +5,7 @@ services:
     #build:
     #  context: .
     #  dockerfile: Dockerfile.web
-    image: ghcr.io/oruger-0730/sirius-web:1.0.12
+    image: ghcr.io/oruger-0730/sirius-web:1.0.13
     platform: linux/amd64
     env_file:
       - .env
