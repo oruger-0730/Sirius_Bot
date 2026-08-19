@@ -97,6 +97,9 @@ importers:
       '@sirius/database':
         specifier: workspace:*
         version: link:../../packages/database
+      '@swc/helpers':
+        specifier: ^0.5.23
+        version: 0.5.23
       better-auth:
         specifier: ^1.7.0
         version: 1.7.0(@prisma/client@7.9.1(prisma@7.9.1(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@5.9.3))(typescript@5.9.3))(mysql2@3.23.3(@types/node@22.20.1))(next@16.3.1(@types/node@22.20.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.102.0))(prisma@7.9.1(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@5.9.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
