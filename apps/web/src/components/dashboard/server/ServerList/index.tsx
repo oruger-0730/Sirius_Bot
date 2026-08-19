@@ -3,10 +3,9 @@
 import { Add, Shield } from "@mui/icons-material";
 
 import { Alert, Button, Card, Typography } from "@mui/material";
-
-import { BACKEND_URL } from "@/lib/constants";
-import { auth } from "@/lib/auth";
 import { headers as fetchHeaders } from "next/headers";
+import { auth } from "@/lib/auth";
+import { BACKEND_URL } from "@/lib/constants";
 import Client, { type Guild } from "./Client";
 
 const fetchServerList = async (): Promise<{

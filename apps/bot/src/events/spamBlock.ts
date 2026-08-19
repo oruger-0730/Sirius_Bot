@@ -1,10 +1,10 @@
+import { prisma } from "@sirius/database";
 import {
 	EmbedBuilder,
 	Events,
 	type Message,
 	PermissionsBitField,
 } from "discord.js";
-import { prisma } from "@sirius/database";
 
 type MessageMetadata = {
 	timestamp: number;

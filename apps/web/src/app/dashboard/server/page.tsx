@@ -1,11 +1,10 @@
 import { Box, CircularProgress } from "@mui/material";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 import ServerHero from "@/components/dashboard/server/ServerHero";
-
 import ServerList from "@/components/dashboard/server/ServerList";
 import { auth } from "@/lib/auth";
-import { Suspense } from "react";
 
 export default async function ServerPage() {
 	const session = await auth.api.getSession({

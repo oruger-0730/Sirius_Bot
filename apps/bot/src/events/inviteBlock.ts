@@ -1,10 +1,10 @@
+import { prisma } from "@sirius/database";
 import {
 	EmbedBuilder,
 	Events,
 	type Message,
 	PermissionsBitField,
 } from "discord.js";
-import { prisma } from "@sirius/database";
 
 const INVITE_REGEX =
 	/(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discordapp\.com\/invite)\/[a-zA-Z0-9]+(?!\?event=)/g;

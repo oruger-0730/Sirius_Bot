@@ -2,13 +2,13 @@
 
 import {
 	Avatar,
+	Box,
 	Card,
 	CardActionArea,
 	CardContent,
 	Chip,
-	Typography,
 	Grid,
-	Box,
+	Typography,
 } from "@mui/material";
 import { ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";

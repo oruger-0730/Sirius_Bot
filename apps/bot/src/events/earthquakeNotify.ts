@@ -1,6 +1,6 @@
+import { prisma } from "@sirius/database";
 import type { APIEmbed, Client } from "discord.js";
 import { EmbedBuilder, Events } from "discord.js";
-import { prisma } from "@sirius/database";
 import { sendEarthquakeWebhook } from "@/utils/earthquakeWebhook";
 
 const EARTHQUAKE_API_URL =
