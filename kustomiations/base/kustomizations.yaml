@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - ./bot-deploy.yaml
   - ./web-deploy.yaml
+  - ./secret.yaml
