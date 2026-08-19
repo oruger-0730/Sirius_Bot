@@ -5,7 +5,7 @@ services:
     #build:
     #  context: .
     #  dockerfile: Dockerfile.web
-    image: ghcr.io/oruger-0730/sirius-web:1.0.3
+    image: ghcr.io/oruger-0730/sirius-web:1.0.5
     env_file:
       - .env
     environment:
@@ -21,7 +21,7 @@ services:
     #build:
     #  context: .
     #  dockerfile: Dockerfile.bot
-    image: ghcr.io/oruger-0730/sirius-bot:1.0.3
+    image: ghcr.io/oruger-0730/sirius-bot:1.0.5
     env_file:
       - .env
     environment:
