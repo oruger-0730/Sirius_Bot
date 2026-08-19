@@ -1,5 +1,5 @@
 # --------------------------------------------------
-# Base Stage
+# Base
 # --------------------------------------------------
 FROM ghcr.io/pnpm/pnpm:11 AS base
 
@@ -56,13 +56,6 @@ RUN pnpm --filter @sirius/database db:generate
 
 RUN pnpm --filter web build
 
-# Debug
-RUN echo "=== Next standalone ===" \
-  && find /app/apps/web/.next/standalone -maxdepth 4 -type f | sort
-
-# Copy standalone as-is
-RUN cp -a /app/apps/web/.next/standalone /app/standalone
-
 
 # --------------------------------------------------
 # Runtime
@@ -77,23 +70,25 @@ ENV HOSTNAME=0.0.0.0
 RUN groupadd --system --gid 1001 nodejs \
   && useradd --system --uid 1001 --gid 1001 nextjs
 
-COPY --from=builder /app/apps/web/public ./public
+# node_modules をそのまま持ってくる
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/apps/web/node_modules ./apps/web/node_modules
 
-COPY --from=builder \
-  --chown=nextjs:nodejs \
-  /app/standalone ./
+# Next.js build
+COPY --from=builder /app/apps/web/.next ./apps/web/.next
+COPY --from=builder /app/apps/web/public ./apps/web/public
 
-COPY --from=builder \
-  --chown=nextjs:nodejs \
-  /app/apps/web/.next/static ./.next/static
+# package.json
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/apps/web/package.json ./apps/web/package.json
 
+# 必要なら cert
 COPY certs/ ./certs/
 
-RUN echo "=== Runtime /app ===" \
-  && find /app -maxdepth 3 -type f | sort
+RUN chown -R nextjs:nodejs /app
 
 USER nextjs
 
 EXPOSE 3000
 
-CMD ["node", "server.js"]
+CMD ["pnpm", "--filter", "web", "start"]
